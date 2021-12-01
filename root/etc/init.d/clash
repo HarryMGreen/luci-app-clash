@@ -533,22 +533,22 @@ if  [  -f $CONFIG_YAML ] && [ "$(ls -l $CONFIG_YAML|awk '{print int($5)}')" -ne 
 		fi
 	fi
 	
-	if [ ! -z "$(egrep '^ {0,}script:' "/etc/clash/config.yaml")" ] && [ "$(uci get clash.config.core)" -ne 4 ];then
-		if [ -f /etc/clash/dtun/clash ];then
-		uci set clash.config.core="4" && uci commit clash
-		sleep 1
-		else
-		if [ "${lang}" == "en" ] || [ $lang == "auto" ];then
-			echo "Your Current Config only support Clash Core(dtun)" >$REAL_LOG 
-		elif [ "${lang}" == "zh_cn" ];then
-			echo "你在使用配置不支持Clash内核，仅支持Clash(dtun)h内核" >$REAL_LOG
-		fi
-		remove_mark >/dev/null 2>&1
-		sleep 1
-		echo "Clash for OpenWRT" >$REAL_LOG		
-		exit 0		
-		fi
-	fi
+	#if [ ! -z "$(egrep '^ {0,}script:' "/etc/clash/config.yaml")" ] && [ "$(uci get clash.config.core)" -ne 4 ];then
+		#if [ -f /etc/clash/dtun/clash ];then
+		#uci set clash.config.core="4" && uci commit clash
+		#sleep 1
+		#else
+		#if [ "${lang}" == "en" ] || [ $lang == "auto" ];then
+			#echo "Your Current Config only support Clash Core(dtun)" >$REAL_LOG 
+		#elif [ "${lang}" == "zh_cn" ];then
+			#echo "你在使用配置不支持Clash内核，仅支持Clash(dtun)h内核" >$REAL_LOG
+		#fi
+		#remove_mark >/dev/null 2>&1
+		#sleep 1
+		#echo "Clash for OpenWRT" >$REAL_LOG		
+		#exit 0		
+		#fi
+	#fi
         
 	if [ ! -z "$(egrep '^ {0,}script:' "/etc/clash/config.yaml")" ] && [ "$(uci get clash.config.p_mode 2>/dev/null)" != "Script" ];then
 		uci set clash.config.p_mode="Script"&& uci commit clash
