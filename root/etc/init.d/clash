@@ -18,6 +18,7 @@ CUSLITTV="/var/dnsmasq.clash"
 REAL_LOG="/usr/share/clash/clash_real.txt"
 
 IPTABLES="/usr/sbin/iptables-nft"
+IP6TABLES="/usr/sbin/ip6tables-nft"
 
 revert_dns() {
 #===========================================================================================================================  
@@ -342,14 +343,14 @@ rules(){
    
    
 			if [ "${ipv6}" == "true" ]; then	
-					  ip6tables -t nat -N clash
+					  $IP6TABLES -t nat -N clash
 					  if [ -n "${ip6}" ]; then
 						 for lan_ip6s in $ip6; do
-							ip6tables -t nat -A clash -d "$lan_ip6s" -j RETURN 2>/dev/null
+							$IP6TABLES -t nat -A clash -d "$lan_ip6s" -j RETURN 2>/dev/null
 						 done
 					  fi
-					  ip6tables -t nat -A clash -p tcp -j REDIRECT --to-ports "$proxy_port"
-					  ip6tables -t nat -A PREROUTING -p tcp -j clash
+					  $IP6TABLES -t nat -A clash -p tcp -j REDIRECT --to-ports "$proxy_port"
+					  $IP6TABLES -t nat -A PREROUTING -p tcp -j clash
 			fi	
 			
 			
@@ -745,7 +746,7 @@ remove_mark(){
 		$IPTABLES -t nat -D PREROUTING -p udp --dport 53 -j DNAT --to "127.0.0.1:$dns_port"
 
 		if [ "${ipv6}" == "true" ]; then
-		ip6tables -t mangle -D PREROUTING -j MARK --set-mark "$PROXY_FWMARK" 2>/dev/null
+		$IP6TABLES -t mangle -D PREROUTING -j MARK --set-mark "$PROXY_FWMARK" 2>/dev/null
 		fi
 
 		$IPTABLES -t mangle -F clash 2>/dev/null
@@ -810,9 +811,9 @@ remove_mark(){
 			$IPTABLES -t nat -D PREROUTING $natx >/dev/null 2>&1
 		done
 		
-		ip6tables -t mangle -F clash >/dev/null 2>&1
-		ip6tables -t mangle -D PREROUTING -p udp -j clash >/dev/null 2>&1
-		ip6tables -t mangle -X clash >/dev/null 2>&1
+		$IP6TABLES -t mangle -F clash >/dev/null 2>&1
+		$IP6TABLES -t mangle -D PREROUTING -p udp -j clash >/dev/null 2>&1
+		$IP6TABLES -t mangle -X clash >/dev/null 2>&1
 		
 		
 		out_linese=$($IPTABLES -nvL OUTPUT -t mangle |sed 1,2d |sed -n '/198.18.0.1\/16/=' 2>/dev/null |sort -rn)
