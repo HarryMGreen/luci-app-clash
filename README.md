@@ -54,7 +54,7 @@
 - coreutils-nohup
 - coreutils-base64
 - ipset
-- iptables
+- iptables-nft
 - luci
 - luci-base
 - wget
@@ -62,7 +62,7 @@
 - curl
 - jsonfilter
 - ca-certificates
-- iptables-mod-tproxy
+- kmod-nft-tproxy
 - kmod-tun
 
 
